@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>聽力練習 &middot; Tone Listening Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wood: #2b2420; --wood-deep: #1c1714; --paper: #f3ecdc; --paper-alt: #e9dfc6;
+    --ink: #2b2420; --cream: #efe6d3; --red: #c0392b; --red-deep: #8e2a1f;
+    --gold: #b08d57; --green: #4b7f52; --green-deep: #375c3c;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: radial-gradient(ellipse at top, rgba(255,255,255,0.03), transparent 60%),
+      repeating-linear-gradient(180deg, var(--wood) 0px, var(--wood) 3px, var(--wood-deep) 3px, var(--wood-deep) 4px);
+    color:var(--cream); font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:40px 16px 60px;
+  }
+  .brand{text-align:center; margin-bottom:8px; max-width:600px;}
+  .brand h1{font-family:'Zhi Mang Xing', cursive; font-size:3rem; margin:0 0 4px; color:var(--cream);}
+  .brand p{font-family:'Source Serif 4', serif; font-style:italic; font-size:1rem; color:var(--gold); margin:0 0 36px;}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    gap:20px;
+    width:100%;
+    max-width:920px;
+  }
+  .tool-card{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:14px;
+    padding:24px 22px;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    box-shadow:0 14px 34px rgba(0,0,0,0.3), 0 2px 0 rgba(255,255,255,0.15) inset;
+    position:relative;
+    transition:transform .12s;
+  }
+  .tool-card:hover{transform:translateY(-3px);}
+  .tool-card::before{
+    content:"";
+    position:absolute; inset:8px;
+    border:1px solid rgba(176,141,87,0.4);
+    border-radius:9px;
+    pointer-events:none;
+  }
+  .tool-card .tag{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.7rem;
+    font-weight:700;
+    letter-spacing:0.4px;
+    color:var(--red-deep);
+    text-transform:uppercase;
+  }
+  .tool-card h2{
+    font-family:'Noto Serif SC', serif;
+    font-size:1.5rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .tool-card .en-title{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:600;
+    font-size:1rem;
+    color:#5a4c3c;
+    margin-top:-6px;
+  }
+  .tool-card p{
+    font-family:'Source Serif 4', serif;
+    font-size:0.92rem;
+    color:#5a4c3c;
+    margin:4px 0 0;
+    line-height:1.4;
+  }
+  .tool-card .stat{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.78rem;
+    color:var(--gold-deep, #8a6d3f);
+    font-weight:600;
+    margin-top:6px;
+  }
+  .section-label{
+    width:100%; max-width:920px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    color:var(--gold);
+    margin:32px 0 12px;
+    padding-bottom:6px;
+    border-bottom:1px solid rgba(176,141,87,0.3);
+  }
+  .section-label:first-of-type{margin-top:0;}
+  footer{
+    margin-top:40px;
+    font-family:'Source Serif 4', serif;
+    font-style:italic;
+    font-size:0.8rem;
+    color:var(--gold);
+    text-align:center;
+    max-width:560px;
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="brand">
+  <h1>聽力練習</h1>
+  <p>Tone Listening Tools &middot; native-speaker recordings for practice and assessment</p>
+</div>
+
+<div class="section-label">Core drills &middot; curated vocabulary + full syllable bank</div>
+<div class="grid">
+  <a class="tool-card" href="practice.html">
+    <span class="tag">Practice</span>
+    <h2>聽音辨調</h2>
+    <div class="en-title">Tone Listening Practice</div>
+    <p>Unlimited replays, instant feedback. Covers curated adjectives/modifiers/pronouns plus all 1,679 Mandarin syllables.</p>
+    <div class="stat">36 + 52 + 1,679 items</div>
+  </a>
+  <a class="tool-card" href="assessment.html">
+    <span class="tag">Assessment</span>
+    <h2>聽力測驗</h2>
+    <div class="en-title">Tone Listening Assessment</div>
+    <p>Limited replays, graded results, printable/copyable score report per student.</p>
+    <div class="stat">Same word banks, timed &amp; scored</div>
+  </a>
+</div>
+
+<div class="section-label">HSK word bank &middot; broad vocabulary coverage</div>
+<div class="grid">
+  <a class="tool-card" href="hsk-word-bank/hsk-practice.html">
+    <span class="tag">Practice</span>
+    <h2>詞庫練習</h2>
+    <div class="en-title">HSK Word Bank Practice</div>
+    <p>Real HSK 2000 vocabulary, filterable by word length, unlimited replays.</p>
+    <div class="stat">8,564 words</div>
+  </a>
+  <a class="tool-card" href="hsk-word-bank/hsk-assessment.html">
+    <span class="tag">Assessment</span>
+    <h2>詞庫測驗</h2>
+    <div class="en-title">HSK Word Bank Assessment</div>
+    <p>Same vocabulary, timed and graded with a printable results table.</p>
+    <div class="stat">Choose 12 / 20 / 40 questions</div>
+  </a>
+</div>
+
+<footer>
+  Sinosplice audio: John Pasden / AllSet Learning, CC BY-NC-SA 2.5.<br>
+  Syllable &amp; HSK audio: audio-cmn project (Chen Wang &amp; Yue Tan recordings, via Shtooka), CC BY-SA.<br>
+  Definitions: CC-CEDICT.
+</footer>
+
+</body>
+</html>

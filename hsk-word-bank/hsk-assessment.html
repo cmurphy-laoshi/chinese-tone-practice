@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK Word Bank &middot; Tone Listening Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wood: #2b2420; --wood-deep: #1c1714; --paper: #f3ecdc; --paper-alt: #e9dfc6;
+    --ink: #2b2420; --cream: #efe6d3; --red: #c0392b; --red-deep: #8e2a1f;
+    --gold: #b08d57; --green: #4b7f52; --green-deep: #375c3c;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: radial-gradient(ellipse at top, rgba(255,255,255,0.03), transparent 60%),
+      repeating-linear-gradient(180deg, var(--wood) 0px, var(--wood) 3px, var(--wood-deep) 3px, var(--wood-deep) 4px);
+    color:var(--cream); font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:28px 16px 60px;
+  }
+  .brand{text-align:center; margin-bottom:18px;}
+  .brand h1{font-family:'Zhi Mang Xing', cursive; font-size:2.6rem; margin:0 0 2px; color:var(--cream);}
+  .brand p{font-family:'Source Serif 4', serif; font-style:italic; font-size:0.95rem; color:var(--gold); margin:0;}
+  .card{background:var(--paper); color:var(--ink); border-radius:14px; width:100%; max-width:520px; padding:28px 24px 24px; box-shadow:0 14px 34px rgba(0,0,0,0.35), 0 2px 0 rgba(255,255,255,0.15) inset; position:relative;}
+  .card::before{content:""; position:absolute; inset:8px; border:1px solid rgba(176,141,87,0.4); border-radius:9px; pointer-events:none;}
+  label{display:block; font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:0.85rem; color:#5a4c3c; margin:14px 0 6px;}
+  input[type=text]{width:100%; padding:11px 12px; border-radius:8px; border:1.5px solid rgba(43,36,32,0.2); font-family:'IBM Plex Sans', sans-serif; font-size:0.95rem; background:var(--paper-alt); color:var(--ink);}
+  .choice-row{display:flex; gap:8px; flex-wrap:wrap;}
+  .choice-btn{flex:1; min-width:100px; padding:11px 8px; border-radius:9px; border:2px solid rgba(43,36,32,0.15); background:var(--paper-alt); font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:0.85rem; color:var(--ink); cursor:pointer;}
+  .choice-btn.active{border-color:var(--red); background:#f0d9d4;}
+  .setup-btn, .next-btn, .submit-btn{display:block; width:100%; margin-top:20px; padding:13px; border:none; border-radius:9px; font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:0.98rem; cursor:pointer; background:var(--red); color:var(--paper);}
+  .setup-btn:hover, .submit-btn:hover, .next-btn:hover{background:var(--red-deep);}
+  .submit-btn:disabled{background:#c7b8a0; cursor:not-allowed;}
+  .status-row{display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Sans', sans-serif; font-size:0.8rem; color:#6b5c4a; margin-bottom:14px;}
+  .progress-track{height:6px; background:var(--paper-alt); border-radius:4px; overflow:hidden; margin-bottom:16px;}
+  .progress-fill{height:100%; background:var(--red); width:0%; transition:width .2s;}
+  .play-zone{display:flex; flex-direction:column; align-items:center; padding:14px 0 20px;}
+  .play-btn{width:92px; height:92px; border-radius:50%; background:var(--wood); border:3px solid var(--gold); color:var(--paper); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,0.25);}
+  .play-btn:disabled{opacity:0.35; cursor:not-allowed;}
+  .play-btn svg{width:34px; height:34px; fill:var(--paper); margin-left:4px;}
+  .plays-left{font-family:'Source Serif 4', serif; font-style:italic; font-size:0.85rem; color:#6b5c4a; margin-top:10px;}
+  .dot-row{display:flex; gap:5px; margin-top:6px;}
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--gold);}
+  .dot.used{background:rgba(176,141,87,0.25);}
+  .syllable-slot-label{text-align:center; font-family:'IBM Plex Sans', sans-serif; font-size:0.75rem; color:#7a6952; margin:14px 0 6px;}
+  .tone-row{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:6px;}
+  .tone-btn{flex:1; min-width:60px; max-width:84px; background:var(--paper-alt); border:2px solid rgba(43,36,32,0.15); border-radius:10px; padding:10px 4px 8px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;}
+  .tone-btn.selected{border-color:var(--red); background:#f0d9d4;}
+  .tone-btn svg{width:34px; height:18px;}
+  .tone-btn .tnum{font-family:'IBM Plex Sans', sans-serif; font-weight:700; font-size:0.9rem; color:var(--ink);}
+  .skip-btn{display:block; width:100%; margin-top:10px; padding:9px; border:1.5px dashed rgba(43,36,32,0.3); border-radius:8px; background:transparent; color:#6b5c4a; font-family:'IBM Plex Sans', sans-serif; font-size:0.85rem; cursor:pointer;}
+  .results-header{text-align:center; margin-bottom:10px;}
+  .results-score{font-family:'Noto Serif SC', serif; font-weight:700; font-size:2.4rem; color:var(--ink);}
+  .results-meta{font-family:'Source Serif 4', serif; font-style:italic; color:#6b5c4a; font-size:0.9rem;}
+  table.review{width:100%; border-collapse:collapse; margin-top:14px; font-size:0.85rem;}
+  table.review th{text-align:left; font-family:'IBM Plex Sans', sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.4px; color:#7a6952; padding:6px 6px; border-bottom:1.5px solid rgba(43,36,32,0.15);}
+  table.review td{padding:7px 6px; border-bottom:1px solid rgba(43,36,32,0.08); font-family:'IBM Plex Sans', sans-serif;}
+  table.review td.hanzi{font-family:'Noto Serif SC', serif; font-size:1.05rem;}
+  .row-correct{color:var(--green-deep);}
+  .row-incorrect{color:var(--red-deep); font-weight:600;}
+  .action-row{display:flex; gap:10px; margin-top:16px;}
+  .action-row button{flex:1; padding:11px; border-radius:8px; border:1.5px solid rgba(43,36,32,0.2); background:var(--paper-alt); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:0.85rem; cursor:pointer;}
+  footer{margin-top:26px; font-family:'Source Serif 4', serif; font-style:italic; font-size:0.8rem; color:var(--gold); text-align:center; max-width:460px;}
+  @media print { body{background:white; color:black;} .card{box-shadow:none; background:white;} footer{display:none;} }
+</style>
+</head>
+<body>
+
+<div class="brand">
+  <h1>词库测验 &middot; HSK Word Bank Assessment</h1>
+  <p>8,564 native-speaker words &middot; limited replays &middot; graded results</p>
+</div>
+
+<div class="card" id="setupCard">
+  <label for="nameInput">Student name</label>
+  <input type="text" id="nameInput" placeholder="Enter your name">
+
+  <label>Word length</label>
+  <div class="choice-row" id="lenChoice">
+    <button class="choice-btn active" data-len="1">1-syllable</button>
+    <button class="choice-btn" data-len="2">2-syllable</button>
+    <button class="choice-btn" data-len="3plus">3+ syllable</button>
+    <button class="choice-btn" data-len="all">All lengths</button>
+  </div>
+
+  <label>How many questions?</label>
+  <div class="choice-row" id="lengthChoice">
+    <button class="choice-btn" data-num="12">12</button>
+    <button class="choice-btn active" data-num="20">20</button>
+    <button class="choice-btn" data-num="40">40</button>
+  </div>
+
+  <button class="setup-btn" id="startBtn">Begin Assessment</button>
+</div>
+
+<div class="card" id="quizCard" style="display:none;">
+  <div class="status-row">
+    <span id="progressLabel">Question 1 of 20</span>
+    <span id="nameLabel"></span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="play-zone">
+    <button class="play-btn" id="playBtn" aria-label="Play audio">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <div class="dot-row" id="dotRow"></div>
+    <div class="plays-left" id="playsLeft">2 plays remaining</div>
+  </div>
+
+  <audio id="audioPlayer"></audio>
+
+  <div id="answerArea"></div>
+
+  <button class="submit-btn" id="submitBtn" disabled>Submit Answer</button>
+  <button class="skip-btn" id="skipBtn">Skip / not sure</button>
+</div>
+
+<div class="card" id="resultsCard" style="display:none;">
+  <div class="results-header">
+    <div class="results-score" id="resultsScore">0%</div>
+    <div class="results-meta" id="resultsMeta"></div>
+  </div>
+  <table class="review">
+    <thead><tr><th>Word</th><th>Correct</th><th>Your answer</th><th>Result</th></tr></thead>
+    <tbody id="reviewBody"></tbody>
+  </table>
+  <div class="action-row">
+    <button id="printBtn">Print results</button>
+    <button id="copyBtn">Copy as text</button>
+    <button id="restartBtn">New assessment</button>
+  </div>
+</div>
+
+<footer>Audio: audio-cmn project (recordings by Yue Tan, from Shtooka's cmn-caen-tan collection), CC BY-SA. Definitions: CC-CEDICT.</footer>
+
+<script src="hsk_data.js"></script>
+<script>
+const TONE_PATHS = {
+  1: '<svg viewBox="0 0 40 20"><line x1="4" y1="6" x2="36" y2="6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>',
+  2: '<svg viewBox="0 0 40 20"><path d="M4 15 L36 4" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+  3: '<svg viewBox="0 0 40 20"><path d="M4 6 Q16 18 20 18 Q24 18 36 4" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+  4: '<svg viewBox="0 0 40 20"><path d="M4 3 L36 17" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+  0: '<svg viewBox="0 0 40 20"><circle cx="20" cy="10" r="3.2" fill="currentColor"/></svg>'
+};
+const TONE_LABEL = {1:'1st',2:'2nd',3:'3rd',4:'4th',0:'neutral'};
+const MAX_PLAYS = 2;
+
+let lenFilter = '1';
+let numQuestions = 20;
+let queue = [];
+let qIndex = 0;
+let playsUsed = 0;
+let selections = {};
+let responses = [];
+let studentName = '';
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+document.getElementById('lenChoice').addEventListener('click', e=>{
+  const btn = e.target.closest('.choice-btn');
+  if(!btn) return;
+  document.querySelectorAll('#lenChoice .choice-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  lenFilter = btn.dataset.len;
+});
+document.getElementById('lengthChoice').addEventListener('click', e=>{
+  const btn = e.target.closest('.choice-btn');
+  if(!btn) return;
+  document.querySelectorAll('#lengthChoice .choice-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  numQuestions = parseInt(btn.dataset.num, 10);
+});
+
+function poolForLen(){
+  const keys = Object.keys(HSK_DATA);
+  return keys.filter(k=>{
+    const n = HSK_DATA[k].syllables.length;
+    if(lenFilter === '1') return n === 1;
+    if(lenFilter === '2') return n === 2;
+    if(lenFilter === '3plus') return n >= 3;
+    return true;
+  });
+}
+
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  studentName = document.getElementById('nameInput').value.trim() || 'Student';
+  const allKeys = shuffle(poolForLen());
+  const n = Math.min(numQuestions, allKeys.length);
+  queue = allKeys.slice(0, n);
+  qIndex = 0;
+  responses = [];
+  document.getElementById('setupCard').style.display = 'none';
+  document.getElementById('resultsCard').style.display = 'none';
+  document.getElementById('quizCard').style.display = 'block';
+  document.getElementById('nameLabel').textContent = studentName;
+  loadQuestion();
+});
+
+function toneOf(syll){ return parseInt(syll.match(/[0-4]$/)[0], 10); }
+
+function loadQuestion(){
+  const current = HSK_DATA[queue[qIndex]];
+  selections = {};
+  playsUsed = 0;
+  document.getElementById('progressLabel').textContent = 'Question ' + (qIndex+1) + ' of ' + queue.length;
+  document.getElementById('progressFill').style.width = (100*(qIndex)/queue.length) + '%';
+  updatePlaysUI();
+  document.getElementById('playBtn').disabled = false;
+  document.getElementById('submitBtn').disabled = true;
+  renderAnswerArea(current);
+}
+
+function updatePlaysUI(){
+  const remaining = MAX_PLAYS - playsUsed;
+  document.getElementById('playsLeft').textContent = remaining + (remaining===1 ? ' play remaining' : ' plays remaining');
+  const dotRow = document.getElementById('dotRow');
+  dotRow.innerHTML = '';
+  for(let i=0;i<MAX_PLAYS;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < playsUsed ? ' used' : '');
+    dotRow.appendChild(d);
+  }
+  document.getElementById('playBtn').disabled = remaining <= 0;
+}
+
+function renderAnswerArea(current){
+  const area = document.getElementById('answerArea');
+  area.innerHTML = '';
+  const numSlots = current.syllables.length;
+  for(let s=0; s<numSlots; s++){
+    if(numSlots > 1){
+      const label = document.createElement('div');
+      label.className = 'syllable-slot-label';
+      label.textContent = 'Syllable ' + (s+1) + ' of ' + numSlots;
+      area.appendChild(label);
+    }
+    const row = document.createElement('div');
+    row.className = 'tone-row';
+    [1,2,3,4,0].forEach(t=>{
+      const btn = document.createElement('button');
+      btn.className = 'tone-btn';
+      btn.dataset.slot = s; btn.dataset.tone = t;
+      btn.innerHTML = TONE_PATHS[t] + '<span class="tnum">' + TONE_LABEL[t] + '</span>';
+      btn.addEventListener('click', ()=>{
+        row.querySelectorAll('.tone-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selections[s] = t;
+        document.getElementById('submitBtn').disabled = Object.keys(selections).length < numSlots;
+      });
+      row.appendChild(btn);
+    });
+    area.appendChild(row);
+  }
+}
+
+document.getElementById('playBtn').addEventListener('click', ()=>{
+  if(playsUsed >= MAX_PLAYS) return;
+  const current = HSK_DATA[queue[qIndex]];
+  const player = document.getElementById('audioPlayer');
+  player.src = 'audio/' + current.file;
+  player.play();
+  playsUsed++;
+  updatePlaysUI();
+});
+
+document.getElementById('submitBtn').addEventListener('click', ()=>recordAndAdvance(false));
+document.getElementById('skipBtn').addEventListener('click', ()=>recordAndAdvance(true));
+
+function recordAndAdvance(skipped){
+  const current = HSK_DATA[queue[qIndex]];
+  const correctTones = current.syllables.map(toneOf);
+  const givenTones = current.syllables.map((_,s)=> skipped ? null : selections[s]);
+  const correct = !skipped && givenTones.every((g,i)=>g===correctTones[i]);
+  responses.push({
+    pinyinClean: current.pinyin_display,
+    hanzi: current.hanzi,
+    correctTones: correctTones,
+    givenTones: givenTones,
+    correct: correct,
+    skipped: skipped
+  });
+  qIndex++;
+  if(qIndex >= queue.length){ showResults(); } else { loadQuestion(); }
+}
+
+function toneStr(tones){ return tones.map(t => t===null ? '—' : TONE_LABEL[t]).join(' + '); }
+
+function showResults(){
+  document.getElementById('quizCard').style.display = 'none';
+  document.getElementById('resultsCard').style.display = 'block';
+  const correctCount = responses.filter(r=>r.correct).length;
+  const pct = Math.round(100*correctCount/responses.length);
+  document.getElementById('resultsScore').textContent = pct + '%';
+  const now = new Date();
+  document.getElementById('resultsMeta').textContent =
+    studentName + ' — ' + correctCount + ' / ' + responses.length + ' correct — ' + now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+
+  const body = document.getElementById('reviewBody');
+  body.innerHTML = '';
+  responses.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.className = r.correct ? 'row-correct' : 'row-incorrect';
+    tr.innerHTML = '<td class="hanzi">' + (r.hanzi ? r.hanzi + ' ' : '') + '<span style="font-family:\'Source Serif 4\',serif;font-style:italic;color:#6b5c4a;font-size:0.8em;">' + r.pinyinClean + '</span></td>' +
+      '<td>' + toneStr(r.correctTones) + '</td>' +
+      '<td>' + (r.skipped ? 'skipped' : toneStr(r.givenTones)) + '</td>' +
+      '<td>' + (r.correct ? '✓' : '✗') + '</td>';
+    body.appendChild(tr);
+  });
+}
+
+document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+document.getElementById('restartBtn').addEventListener('click', ()=>{
+  document.getElementById('resultsCard').style.display = 'none';
+  document.getElementById('setupCard').style.display = 'block';
+  document.getElementById('nameInput').value = '';
+});
+document.getElementById('copyBtn').addEventListener('click', ()=>{
+  let text = 'HSK Word Bank Assessment\n' + document.getElementById('resultsMeta').textContent + '\n\n';
+  responses.forEach(r=>{
+    text += (r.hanzi||'') + ' (' + r.pinyinClean + ')  correct: ' + toneStr(r.correctTones) +
+      '  given: ' + (r.skipped ? 'skipped' : toneStr(r.givenTones)) + '  ' + (r.correct ? 'CORRECT' : 'INCORRECT') + '\n';
+  });
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('copyBtn');
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(()=>{btn.textContent = original;}, 1500);
+  });
+});
+</script>
+</body>
+</html>
